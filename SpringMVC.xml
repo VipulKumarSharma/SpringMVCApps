@@ -266,6 +266,9 @@ Spring MVC :
             
             @Range(min = 1, max = 120)
 	        private int minutes;
+
+            @NotNull
+	        private String activity;
         
         c. Apply @Valid in Controller method bean parameter.
         d. Add BindingResult parameter to our object, which contains the resonse from validation. 
@@ -337,12 +340,136 @@ Spring MVC :
            It can also look at the file extension that is sent as well.
 
 
+28. RestFul Service ::
+
+        a. Add dependencies in pom.xml 
+            <dependency>
+                <groupId>org.codehaus.jackson</groupId>
+                <artifactId>jackson-mapper-asl</artifactId>
+                <version>1.4.1</version>
+            </dependency>
+            <dependency>
+                <groupId>com.thoughtworks.xstream</groupId>
+                <artifactId>xstream</artifactId>
+                <version>1.3.1</version>
+            </dependency>
+            <dependency>
+                <groupId>org.springframework</groupId>
+                <artifactId>spring-oxm</artifactId>
+                <version>3.2.0.RELEASE</version>
+            </dependency>
+            
+            jackson-mapper-asl  - Martial data to JSON 
+            oxm                 - Object XML Mapper, marshels things out of XML 
+            To forcefully update maven dependencies right click project > Maven > Update Project.
+        
+        b. Allow json content by adding mapping in web.xml
+            <servlet-mapping>
+                <servlet-name>fitTrackerServlet</servlet-name>
+                <url-pattern>*.json</url-pattern>
+            </servlet-mapping>
+
+        c. Add ContentNegotiatingViewResolver in config.xml 
+
+            <bean class="org.springframework.web.servlet.view.ContentNegotiatingViewResolver">
+                <property name="order" value="1" />
+                <property name="contentNegotiationManager">
+                    <bean class="org.springframework.web.accept.ContentNegotiationManager">
+                        <constructor-arg>
+                            <bean class="org.springframework.web.accept.PathExtensionContentNegotiationStrategy">
+                                <constructor-arg>
+                                    <map>
+                                        <entry key="json" value="application/json" />
+                                        <entry key="xml" value="application/xml" />
+                                    </map>
+                                </constructor-arg>
+                            </bean>
+                        </constructor-arg>
+                    </bean>
+                </property>
+                
+                <property name="defaultViews">
+                    <list>
+                        <bean class="org.springframework.web.servlet.view.json.MappingJacksonJsonView" />
+                        <bean class="org.springframework.web.servlet.view.xml.MarshallingView">
+                            <constructor-arg>
+                                <bean class="org.springframework.oxm.xstream.XStreamMarshaller">
+                                    <property name="autodetectAnnotations" value="true" />
+                                </bean>
+                            </constructor-arg>
+                        </bean>
+                    </list>
+                </property>
+            </bean>
+
+            <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" 
+                p:prefix="/WEB-INF/jsp/" p:suffix=".jsp" p:order="2"/>
+                    
+            <bean class="org.springframework.web.servlet.view.BeanNameViewResolver" p:order="0"/>
 
 
+            "application/json" and "application/xml" are actual http header types.
+            defaultViews - what framework we wanna use based on view type that's coming through.
 
+        d.  @ResponseBody - it says, what you return is the actual content that I want to expose.
 
+                @Autowired
+                private ExerciseService exerciseService;
 
-4. To forcefully update maven dependencies right click project > 
+                It is an example of dependency injection.
+
+                @RequestMapping(value = "/activities", method = RequestMethod.GET)
+                public @ResponseBody List<Activity> findAllActivities() {
+                    return exerciseService.findAllActivities();
+                }
+
+            It gives data in JSON format having bean properties as keys.
+
+                @Service("exerciseService")
+                public class ExerciseServiceImpl implements ExerciseService {
+                    public List<Activity> findAllActivities() {		
+                        List<Activity> activities = new ArrayList<Activity>();
+                        
+                        Activity run = new Activity();
+                        run.setDesc("Run");
+                        activities.add(run);
+                        
+                        Activity bike = new Activity();
+                        bike.setDesc("Bike");
+                        activities.add(bike);
+                        
+                        return activities;
+                    }
+                }
+
+        e. Add jquery to call service using ajax to fetch list of activities.
+
+            <script type="text/javascript">
+                $(document).ready(function() {
+                    var url = '<spring:url value="activities.json"/>';
+                    // It is equal to http://localhost:8080/SpringApp/activities.json
+
+                    $.getJSON(url, {ajax:'true'}, function(data) {
+                        var html = '<option value="">--Please select one--</option>';
+                        var len = data.length;
+                        for (var i = 0; i < len; i++) {
+                            html += '<option value="' + data[i].desc + '">'
+                                    + data[i].desc + '</option>';
+                        }
+                        html += '</option>';
+                        
+                        $('#activities').html(html);
+                    });
+                });
+            </script>
+
+            <td>
+				<form:select id="activities" path="activity"></form:select>
+			</td>
+
+            The string '<spring:url value="activities.json"/>' is equal to 'http://localhost:8080/SpringApp/activities.json'.
+
+4.  
 
 5. STS configurations : 
 

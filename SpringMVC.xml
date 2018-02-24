@@ -1,0 +1,350 @@
+---------------------------------------------------------------------------
+Spring MVC : 
+---------------------------------------------------------------------------
+
+1.  Use Spring Tool Suite to develop Spring Apps, because it makes things a lot easier.
+
+2.  You need following dependencies to start with :
+        <spring-webmvc>     - include in our project
+        <servlet-api>       - provided by server
+        <jstl>              - provided by server
+
+        [Note - <spring-mvc> automatically includes all dependent JARS 
+            (i.e. transdependencies like context, aop, core, web, expression, beans, commons-logging and aopalliance)]
+
+3.  Why we keep view files under a folder in WEB-INF?
+        a. Security ::
+            I don't want people to knoe what my filename is specifically, I've to serve out to them whatever file I want.
+        
+        b. To control user experience ::
+            I force them to go through my controller and routing, ensuring that their session was set up correctly,
+            or they are logged in or other things, etc.
+
+        c. Other resons ::
+            Bookmarking, deep linking, breadcrumbs
+        
+        [Note : InternalResourceViewResolver is used to setup these things]
+
+4.  Create Maven project of type <maven-archetpye-webapp>.
+
+5.  Create <DispatcherServlet> configuration in web.xml file.
+    
+        <servlet>
+            <servlet-name>SunEasyServlet</servlet-name>
+            <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+            <init-param>
+                <param-name>contextConfigLocation</param-name>
+                <param-value>/WEB-INF/config/spring-servlet.xml</param-value>
+            </init-param>
+            <load-on-startup>1</load-on-startup>
+        </servlet>
+        <servlet-mapping>
+            <servlet-name>SunEasyServlet</servlet-name>
+            <url-pattern>*.html</url-pattern>
+        </servlet-mapping>
+
+        [Note : It will look for configuration file named <servletName>config.xml, unless you define the exact file name &
+        path in servlet <init-param>. <url-pattern> just shows simply what file extensions, or what path we are going to accept for our DispatcherServlet.]
+
+6.  NameSpaces : 
+
+        <beans:beans    xmlns:context="http://www.springframework.org/schema/context"
+                        xmlns:mvc="http://www.springframework.org/schema/mvc">
+            <mvc:annotation-driven />
+            <context:component-scan base-package="com.mind.suneasy.controller.impl" />
+        </beans>
+
+        [Note : We are asking for specific functionality out of that MVC & context schema, and it's going to go through
+        and replace this code with more complex definition. To add namespaces in your XML file simply use the "Namespaces"
+        tab.]
+        
+        <mvc:annotation-driven />   - To use annotation driven approach.
+        <context:component-scan>    - Used to scan controllers in our project
+
+7.  Thanks to Spring, everything is POJO here & has a Tiered Architecture .
+        @Controller         - Represents Spring controller class.
+        @RequestMapping     - Represents tying of the controller method with some url, having some value. 
+        Model               - HashMap, which is passed to DispatcherServlet. 
+                              You can add attributes using model.addAttribute("abc","xyz").
+        returned views      - controller method return view file name(key) to the DispatcherServlet, which will find that                          page using InternalResourceViewResolver in config.xml file.
+        @Repository         - Represents Model class
+        @Service            - Represents Business logic class.
+        @ModelAttribute     - Used when we want to send data to our controller or retrieve data from our controller
+                              that's bound to an object or represented by an object. It can also be validated with 
+                              a binding result.
+
+8.  How to let Spring know where my views are ?
+        By using InternalResourceViewResolver in config file.
+
+        <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+            <property name="prefix" value="/WEB-INF/jsp/"/>
+            <property name="suffix" value=".jsp"/>
+        </bean>
+        
+        For writing the condensed version, include xmlns:p="http://www.springframework.org/schema/p".
+        
+        <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver" 
+            p:prefix="/WEB-INF/jsp/" p:suffix=".jsp" />
+
+9.  Controller : 
+        a. Handles incoming request and build the response.
+        b. Interpret user input and transform it into a model. Determines view based off of logic.
+        b. Annotated with @Controller
+        c. Works with Service and Repository tier for business logic and data gathering.
+        d. Handles the exceptions and routes the views accordingly (interprets exceptions from Service Tier).
+
+10. Service : 
+        a. Describes the actions of the system.
+        b. Annotated with @Service
+        c. Where the business logic resides.
+        d. Ensures business object is in valid state.
+        e. Where transactions often begin (2 phase commits, or where we know there is a chance we might have to 
+           roll back or access web services)
+        f. Often have same methods as Repository, but different focus.
+
+11. Repository :
+        a. Describes data of the system.
+        b. Annotated with @Repository
+        c. Focussed on persisting and interacting with DB.
+        d. 1-1 mapping with an Object.
+        e. Often a 1-1 mapping with DB table.
+
+12. Spring Tag Library (used in views):
+    
+        <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %> 
+        
+        <form:form commandName="exercise">
+            <table>
+                <tr>
+                    <td>Minutes Exercise For Today:</td>
+                    <td><form:input path="minutes"/></td>
+                </tr>
+                <tr>
+                    <td colspan="2">
+                        <input type="submit" value="Enter Exercise"/>
+                    </td>	
+                </tr>
+            </table>
+        </form:form>
+
+        Before using this we have to create beans with properties same as path attributes above.
+        We also have to add parameter to our controller method (@ModelAttribute ("<commandName>") BeanClass object)
+
+        CTRL+SHIFT+O    - Importing unimported Classes
+
+
+13. View ::
+        We can have multiple view resolvers (you have to order them, which one will gets fired first) and multiple view types in our application.
+
+        ResourceBundleViewResolver      - used for internationalization purposes.
+        TilesViewResolver               - used for tiles templated layout architecture.
+        ContetNegotiatingViewResolver   - used when returning multiple content types from the same application
+                                          e.g. XML, JSON, JSP, HTML, etc.
+
+14. Chaining in controller methods ::
+        
+        a. return "forward:<url>.<extension_allowed_in_web.xml>"
+
+            Instead of returning the view use, to go outside of our framework & coming back in. 
+            It'll bypass the ViewResolver & comes back through a request and go to view resolver this time.        
+            If you don't mention <extension_allowed_in_web.xml> then spring will give 404 error.
+        
+        b. return "redirect:<url>.<extension_allowed_in_web.xml>"
+            
+            It closes our request and creates a new request, losing all previous information.
+            e.g. useful when we don't want user to go back 
+            (like in payment gateways, so that you don't get charged twice)
+
+15. Display static content through Spring MVC ::
+        In content.xml define 
+            <mvc:resources location="<folder_name_in_web.xml_having_static_content>" mapping="<files_under_dir>" />
+
+            <mvc:resources location="pdfs" mapping="/pdfs/**" />
+
+        It finds any file under "pdfs" folder. We can have multiple mappings in here.
+        We also have to define mapping in web.xml file
+
+            <servlet-mapping>
+                <servlet-name>springApp</servlet-name>
+                <url-pattern>/pdfs/**</url-pattern>
+            </servlet-mapping>
+
+        Spring uses File resolver controller, which bypasses all of our defined controllers and shows static content.
+        http://localhost:8080/SpringApp/pdfs/xyz.pdf
+
+16. Spring Tag Libraries ::
+
+        <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %> 
+        spring.tld performs below functions ,
+            a. Error evaluations
+            b. Setting themes
+            c. Outputting internationalized messages
+        
+        <%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %> 
+        And spring-form.tld performs below functions,
+            a. Process form data
+            b. Spring form tags :
+                Meant to bind to objects from model as well as carry information on required fields.
+                They also take a CSS class for changing their display from normal to error status.
+                They are also javascriptive attributes and other things you can tie as well.
+
+17. Resource Bundling ::
+        a. Create properties files in resources folder and add key value pairs.
+
+        b. Add ResourceBundleMessageSource in config.xml 
+            <bean id="messageSource" class="org.springframework.context.support.ResourceBundleMessageSource" 
+	            p:basename="<property_fileName>"></bean>
+
+        c. Access the key-value pairs using below tag in view file 
+            <spring:message code="key" />
+
+18. Interceptors ::
+        a. They are registered as a part of request life cycle & usually involved in intercepting data 
+           coming from view to controller.
+        b. They have the ability to pre-handle and post handle web requests. 
+           (intercept things to the way to controller and way back from controller)
+        c. They have callback methods which are used to override or change values.
+        d. Commonly used for Locale changing.
+
+19. Internationalization ::
+        a. Create foreign languages properties file with filename "<filename>_<lang_code>.properties"
+        b. Define localeResolver bean in config.xml
+            <bean id="localeResolver" class="org.springframework.web.servlet.i18n.SessionLocaleResolver" 
+                p:defaultLocale="en"/>
+
+        c. Register an Interceptor
+            <mvc:interceptors>
+                <bean class="org.springframework.web.servlet.i18n.LocaleChangeInterceptor" 
+                    p:paramName="language"/>
+            </mvc:interceptors>
+
+            http://localhost:8080/SpringApp?language=en
+
+            This interceptor looks for parameter in request with name "language" and fetch the text accordingly 
+            from the matched language property file.
+
+20. Model parameter in controller methods :
+        a. Spring will pass(by reference) in the backing model to your method.
+        b. It will get absorbed back in the framework as a part of interceptor as a part of request life cycle.
+        c. Actually return back the data to JSP page.
+
+        [Note : If you want to store object in the session use @SessionAttributes("<objName>") above class definition.
+                If you want to access objects in views use ${objName.property}.]
+
+21. Constraint validation ::
+        When yo're expecting a field not to be null, must have letters, numbers, etc, like that.
+
+22. Business Logic Validation ::
+        Null fields aren't necessarily business logic, but rather constraints.
+        These are what Spring MVC has built-in mechanisms to help us validate against.
+        
+        The other type of validation on business logic should really be handled on service tier & not the controller.
+        This type of validation is guaranteeing things like an entity is valid in DB or a username isn't already taken 
+        in our LDAP server or our DB.
+
+23. Validator Interface : 
+        Can be used at Service tier.
+        ValidationUtils is a helper Class which uses BindingResult Class 
+        It does user SimpleFormController which just deals with forms.
+
+24. JSR-303 ::
+        a. Spring MVC just integrates with JSR-300 for it's validation process and reporting errors.
+        b. We can use this in any application or across multiple tiers.
+        c. Annotation based , which means it works with POJO.
+        d. It can be extended to use our own custom validation rules as well.
+        e. Hibernate Validator.
+
+25. Apply validation in you application ::
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate-validator</artifactId>
+            <version>4.2.0.Final</version>
+        </dependency>
+
+        a. Add hibernate-validator dependency in pom.xml, which will also imports validation-api.
+        b. Apply @Range in Bean properties
+            
+            @Range(min = 1, max = 120)
+	        private int minutes;
+        
+        c. Apply @Valid in Controller method bean parameter.
+        d. Add BindingResult parameter to our object, which contains the resonse from validation. 
+           Check for errors using result.hasErrors()
+
+            @RequestMapping(value = "addGoal", method = RequestMethod.POST)
+            public String updateGoal(@Valid @ModelAttribute("goal") Goal goal, BindingResult result) {
+                System.out.println("result has errors: " + result.hasErrors());
+                return "redirect:addMinutes.html";
+            }
+
+        e.  Display error message on view 
+
+            <style>
+                .error {
+                    color: #ff0000;
+                }
+
+                .errorblock {
+                    color: #000;
+                    background-color: #ffEEEE;
+                    border: 3px solid #ff0000;
+                    padding: 8px;
+                    margin: 16px;
+                }
+            </style>
+
+            <form:form commandName="goal">
+                <form:errors path="*" cssClass="errorblock" element="div" />
+                <table>
+                    <tr>
+                        <td>Enter Minutes:</td>
+                        <td><form:input path="minutes" cssErrorClass="error" /></td>
+                        <td><form:errors path="minutes" cssClass="error" /></td>
+                    </tr>
+                    <tr>
+                        <td colspan="3">
+                            <input type="submit" value="Enter Goal Minutes"/>
+                        </td>
+                    </tr>
+                    
+                </table>
+            </form:form>
+
+
+            <form:errors path="*" cssClass="errorblock" element="div" />
+                It displays any error which will occur.
+
+            <form:errors path="minutes" cssClass="error" />
+                It display errors regarding "minutes" property in bean.
+        
+        f.  Declare custom error message in your properties file using below convention
+
+                Range.<beanName>.<propertyname>=<Custom_Message>
+
+26. RESTFUL Services ::
+        On DB, we can do CRUD operations. REST is made just like that,
+            
+            a. POST     - Create an object through REST sercice.
+            b. GET      - Read operation
+            c. PUT      - Updation, usually overridden and sent using POST instead.
+            d. DELETE   - Deletion 
+        
+        POST is used for both Create and update.
+
+27. ContentNegotiatingViewResolver 
+        a. Used to return various content types from our application based off the request.
+        b. Uses the Accepts header that is sent using http headers, to determine the content that it'll host up. 
+           It can also look at the file extension that is sent as well.
+
+
+
+
+
+
+
+4. To forcefully update maven dependencies right click project > 
+
+5. STS configurations : 
+
+
+

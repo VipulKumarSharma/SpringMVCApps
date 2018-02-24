@@ -1,0 +1,598 @@
+@charset "utf-8";
+/* CSS Document */
+body {
+	margin: 0px;
+	padding: 0px;
+	background-position: top center;
+	background-color: #ffffff;
+	overflow: hidden;
+}
+
+.duplicateSessionText {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 13px;
+	font-style: normal;
+	font-weight: normal;
+	margin-top: 2px;
+}
+
+form,pre,p {
+	margin: 0;
+	padding: 0;
+}
+
+#form {
+	width: 100%;
+	margin: 0 auto;
+	overflow:  auto;
+	background-image: -webkit-gradient(linear, 0% 0%, 0% 100%, from(#BDBDBD),
+		to(#FFFFFF), color-stop(.1, #FFFFFF) );
+}
+
+img {
+	border: 0;
+}
+
+#topbar {
+	height: 57px;
+	background: url(../images/topbg.png) repeat-x;
+}
+
+#topmostbar {
+	height: 78px;
+	width: 100%;
+	float: left;
+	margin: 0px 0px 0px 0px;
+	background-color: #003869;
+}
+
+#topmostbar .toplinks2 {
+	width: 98%;
+	height: auto;
+	margin: 0 auto;
+}
+
+#topmostbar .toplinks2 .toplinks1 {
+	height: 25px;
+	width: auto;
+}
+
+#topmostbar .toplinks2 .toplinks1 .topmostnavi {
+	height: 15px;
+	width: 300px;
+	text-align: left;
+	margin: o;
+	margin: 5px 0px 0px 0px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	color: #ffffff;
+	vertical-align: text-bottom;
+	bottom: 0px;
+	float: left;
+}
+
+#topmostbar .toplinks2 .toplinks1 .topmostnavi a {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #ffffff;
+	vertical-align: text-bottom;
+	bottom: 0px;
+	text-decoration: none;
+}
+
+#topmostbar .toplinks2 .toplinks1 .topmostnavi a:hover {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #ffae00;
+	vertical-align: text-bottom;
+	bottom: 0px;
+}
+
+#topmostbar .toplinks2 .toplinks1 .welcomearea {
+	width: 45%;
+	height: 11px;
+	font-size: 12px;
+	color: #FFF;
+	text-align: right;
+	float: right;
+	font-family: Tahoma, Geneva, sans-serif;
+	margin-top: 5px;
+	margin-right: 10px;
+	margin-bottom: 5px;
+	margin-left: 111;
+	padding-right: 0px;
+}
+
+#topmostbar .topnavigationWrap {
+	height: 52px;
+	text-align: right;
+	background: url(../images/topbg.jpg) repeat-x;
+	width: 100%;
+}
+
+#topmostbar .topnavigationWrap .topnavigation {
+	width: 98%;
+	margin: 0 auto;
+}
+
+#topmostbar .topnavigation .logoarea {
+	height: 48px;
+	width: 85px;
+	float: left;
+	vertical-align: middle ;
+	/* 	background:url(../images/logo.png); */
+	margin: 3px 0px 0px 0px;
+}
+
+#menuWrap {
+	float: right;
+}
+
+#workarea {
+	width: 98%;
+	margin: 0 auto;
+}
+
+#dashtop {
+	height: 36px;
+	background-image: url(../images/top-bg.jpg);
+	background-repeat: repeat-x;
+	text-align: right;
+	padding-top: 5px;
+	margin: o;
+}
+
+#loginhead {
+	height: 72px;
+	width: 575px;
+	margin: 0 auto;
+	background: url(../images/logintext.png) no-repeat;
+	background-position: top center;
+}
+
+#loginbody {
+	background: url(../images/loginbg.png) no-repeat;
+	background-position: top center;
+	height: 365px;
+	width: 575px;
+	margin-top: 130px;
+	margin: 0 auto;
+}
+
+#loginbody .logintext {
+	font-family: "Myriad Pro";
+	font-size: 18px;
+	font-style: normal;
+	line-height: normal;
+	color: #434343;
+	text-decoration: none;
+	padding-top: 88px;
+	padding-left: 260px;
+}
+
+#loginbody .logininput {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #434343;
+	margin-top: 7px;
+	border: none;
+	background: none;
+	width: 265px;
+}
+
+#loginbody .logintext1 {
+	font-family: "Myriad Pro";
+	font-size: 18px;
+	font-style: normal;
+	line-height: normal;
+	color: #434343;
+	padding-top: 22px;
+	padding-left: 260px;
+}
+
+#loginbody .sub {
+	width: 100%;
+	height: 34px;
+	margin: 24px;
+}
+
+#loginbody .sub .GetMe {
+	width: 470px;
+	height: 31px;
+	float: left;
+	text-align: right;
+	padding-top: 5px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 18px;
+	color: #ffffff;
+}
+
+#loginbody .sub .Butt {
+	width: 30px;
+	height: 31px;
+	float: left;
+	margin: 5px 0px 0px 10px;
+}
+
+#loginbody .sub .Butt .submitbutton {
+	border: none;
+	background: none;
+	width: 31px;
+	height: 24px;
+}
+
+#loginbody .fp {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #ffda43;
+	text-align: right;
+	margin: 0px 20px 0px 0px;
+}
+
+#loginbody .fp a {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #ffda43;
+	text-decoration: underline;
+}
+
+#bottombar {
+	background: url(../images/bottombg.png) repeat-x;
+	background-position: bottom center;
+	width: 100%;
+	height: 49px;
+	margin: 0px 0px 0px 0px;
+	vertical-align: bottom;
+	position: absolute;
+	bottom: 0px;
+	left: 0px;
+}
+
+#bottombar .bottombar1 {
+	width: 98%;
+	height: auto;
+	margin: 0 auto;
+	position: relative;
+}
+#bottombar.bottombar1.languageDiv {
+	width: 20%;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: white !important;
+/* 	color: #79add7; */
+/* 	text-align: left; */
+/* 	float: left; */
+	margin: 15px 0px 5px 5px;
+}
+#bottombar .bottombar1 .poweredby {
+	width: 40%;
+/* 	height: auto; */
+	margin: 5px 0px 5px 0px;
+	float: right;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #ffffff;
+}
+
+#bottombar .bottombar1 .links {
+	width: 60%;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #79add7;
+	text-align: left;
+	float: left;
+	margin: 5px 0px 5px 0px;
+}
+
+
+#bottombar .bottombar1 .links a {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #ffffff;
+	text-align: left;
+	clear: left;
+	float: none;
+	padding-top: 10px;
+	padding-right: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	text-decoration: none;
+}
+
+#bottombar .bottombar1.coyrightfont {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+	color: #79add7;
+	text-align: right;
+	text-align: center;
+	clear: left;
+	float: none;
+}
+
+#dashMainCont {
+	width: 100%;
+	margin: 0 auto;
+}
+
+#dashMaintop {
+	height: 27px;
+	width: 100%;
+	float: left;
+}
+
+.mainleft {
+	width: 18%;
+	min-height: 100px;
+	height: 75%;
+	float: left;
+}
+
+.mainleft .photoid {
+	width: 100%;
+	text-align: center;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+	padding: 0px;
+	margin: 0px;
+	color: #36C;
+}
+
+.mainleft .LeftNavi {
+	width: 100%;
+	height: 50%;
+}
+
+.mainleft .LeftNavi ul {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.mainleft .LeftNavi li {
+	height: 14px;
+	width: 90%;
+	list-style: none;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	color: #4c4c4c;
+	padding: 5px 0px 0px 10px;
+	margin-bottom: 2px;
+	white-space: nowrap;
+}
+
+.mainleft .LeftNavi li a:hover {
+	background-color: #e8f2fe;
+}
+
+.display .partleft {
+	width: 270px;
+	height: auto;
+	float: left;
+	margin: 0px;
+	float: left;
+}
+
+.display .partleft .box {
+	width: 265px;
+	height: auto;
+	float: left;
+	margin: 0px;
+}
+
+.display .partright {
+	width: 270px;
+	height: auto;
+	float: left;
+	margin: 0px 0px 0px 18px;
+	float: left;
+}
+
+.display .boxtop {
+	width: 250px;
+	height: 28px;
+	background: url(../images/boxtop.jpg) no-repeat;
+	font-family: "Myriad Pro";
+	font-size: 16px;
+	color: #054b84;
+	padding-left: 15px;
+	padding-top: 5px;
+}
+
+.display .boxmid {
+	width: 250px;
+	height: auto;
+	background: url(../images/boxbg.jpg) repeat-y;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #666;
+	margin: 0px;
+	padding: 10px 5px 0px 10px;
+	float: left;
+}
+
+.display .boxmid .Container {
+	width: 250px;
+	height: 80px;
+}
+
+#dashMainmid .display .boxmid .iconbox {
+	width: 75px;
+	height: 80px;
+	margin: 5px 5px 5px 5px;
+	float: left;
+}
+
+#dashMainmid .display .boxmid .textboxarea {
+	width: 160px;
+	height: 80px;
+	float: left;
+	margin: 5px 0px 0px 0px;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #525252;
+	line-height: 16px;
+}
+
+#dashMainmid .display .boxmid .textboxarea a {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #b80613;
+	text-decoration: none;
+	line-height: 20px;
+	font-weight: bold;
+}
+
+#dashMainmid .display .boxbottom {
+	width: 265px;
+	height: 4px;
+	float: left;
+	background: url(../images/boxbottom.jpg) no-repeat;
+}
+
+#dashMainmid .mainright {
+	width: 150px;
+	height: 382px;
+	background: url(../images/mainrightbg.jpg) repeat-y;
+	float: left;
+	margin-right: 10px
+}
+
+#dashMainmid .mainright .rightbox {
+	width: 140px;
+	height: auto;
+	margin: 0px 0px 0px 15px;
+	auto;
+}
+
+#dashMainmid .mainright .rightbox .righttop {
+	width: 140px;
+	height: 28px;
+	background: url(../images/graphtop.jpg) no-repeat;
+	font-family: "Myriad Pro";
+	font-size: 16px;
+	font-style: normal;
+	font-weight: normal;
+	color: #054b84;
+	text-align: left;
+	padding-left: 15px;
+	padding-top: 5px;
+}
+
+#dashMainmid .mainright .rightbox .rightmiddle {
+	width: 140px;
+	height: auto;
+	background: url(../images/graphborder.jpg) repeat-y;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #666;
+	padding-top: 10px;
+	text-align: center;
+}
+
+#dashMainmid .mainright .rightbox .rightmiddle {
+	width: 140px;
+	height: auto;
+	background: url(../images/graphborder.jpg) repeat-y;
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 11px;
+	color: #666;
+	padding-top: 10px;
+	float: left;
+}
+
+#dashMainmid .mainright .rightbox .rightmiddle .dateclass {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 12px;
+	font-weight: normal;
+	color: #666;
+	border: 1px solid #CCC;
+	width: 125px;
+}
+
+#dashMainmid .mainright .rightbox .rightbottom {
+	width: 140px;
+	height: 4px;
+	background: url(../images/graphbottom.jpg);
+	float: left;
+}
+
+#dashMainbot {
+	height: 27px;
+	width: 937px;
+	background-image: url(../images/mainbot.png);
+	float: left;
+}
+
+.toolTip {
+	font-family: Verdana, Arial, Helvetica, sans-serif;
+	font-size: 10px;
+}
+
+.toolTip ul {
+	font-weight: bold;
+	padding: 0px;
+}
+
+.toolTip ul li {
+	font-weight: normal;
+	padding-left: 10px;
+}
+.sessionPageTextNormal{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 12px;
+}
+.sessionPageHeader{
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 14px;
+	font-weight: bold;
+}
+
+/* Css for leave scheme*/
+
+.accordianHeader{
+	
+	background: rgb(244, 242, 242) !important;
+	border-color: #969899 !important;
+}
+
+.leaveShemeDiv{
+	
+	float:left;
+}
+
+.accordianUL{
+	
+	
+	border-color: #969899 !important;
+}
+
+.leaveShemeHeaderText{
+	
+	font-weight: bold !important;
+	
+}
+
+.advancePostingWidth {
+	
+	width: 450px;
+}
+
+.backDatePostingWidth {
+	
+	width: 470px;
+}
+.leaveGrantWidth {
+	
+	width:  320px;
+}
+
+.yearEndWidth{
+	
+	width: 390px;
+}
+
+.blockDataMargin{
+	margin-left:20px;
+	
+}

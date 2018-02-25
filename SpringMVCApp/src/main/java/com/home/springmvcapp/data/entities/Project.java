@@ -5,21 +5,13 @@ import java.math.BigDecimal;
 public class Project {
 
 	private Long projectId;
-
 	private String name;
-
 	private String description;
-
 	private String sponsor;
-
 	private BigDecimal authorizedHours;
-
 	private BigDecimal authorizedFunds;
-
 	private String year;
-
 	private boolean special;
-
 	private String type;
 
 	public Long getProjectId() {
@@ -35,6 +27,7 @@ public class Project {
 	}
 
 	public void setName(String name) {
+		System.out.println("Spring MVC Databinding in action");
 		this.name = name;
 	}
 
@@ -95,4 +88,14 @@ public class Project {
 		this.type = type;
 	}
 
+	@Override
+	public String toString() {
+		return "Project [projectId=" + projectId + ", name=" + name
+				+ ", description=" + description + ", sponsor=" + sponsor
+				+ ", authorizedHours=" + authorizedHours + ", authorizedFunds="
+				+ authorizedFunds + ", year=" + year + ", special=" + special
+				+ ", type=" + type + "]";
+	}
+
+	
 }

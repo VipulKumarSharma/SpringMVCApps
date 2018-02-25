@@ -332,7 +332,7 @@ Create Spring MVC App from scratch ::
         }
 
         <input type="text" class="form-control" name="name"/>
-        
+
         @RequestMapping(value="/add", method=RequestMethod.POST)
         public String saveProject(HttpServletRequest request, HttpSession session){
             System.out.println(session.getAttribute("token"));
@@ -350,6 +350,16 @@ Create Spring MVC App from scratch ::
             System.out.println("invoking saveProject");
             return "project_add";
         }
+
+        @RequestParam("name") automatically converts the received value to mentioned type (i.e. Long).
+
+37. Data Binding :: 
+        @ModelAttribute is used to bind form data to a Bean in Spring.
+        Spring will match the parameter names with bean properties, and assign values to them.
+
+
+
+
 
 
 

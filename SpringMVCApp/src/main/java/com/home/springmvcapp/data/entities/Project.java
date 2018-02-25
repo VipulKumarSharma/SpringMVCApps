@@ -5,13 +5,21 @@ import java.math.BigDecimal;
 public class Project {
 
 	private Long projectId;
+
 	private String name;
+
 	private String description;
+
 	private String sponsor;
+
 	private BigDecimal authorizedHours;
+
 	private BigDecimal authorizedFunds;
+
 	private String year;
+
 	private boolean special;
+
 	private String type;
 
 	public Long getProjectId() {

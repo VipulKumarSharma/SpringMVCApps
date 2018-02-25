@@ -320,6 +320,37 @@ Create Spring MVC App from scratch ::
             If the name of passed variable {projectId} is same as Long projectId argument, then there is no
             need of mentioning @PathVariable.
 
+36. Handler Method Arguments ::
+        a.  HttpServletRequest
+        b.  HttpSession
+
+        @RequestMapping(value="/add",method=RequestMethod.GET)
+        public String addProject(HttpSession session){
+            session.setAttribute("token", "12345");
+            System.out.println("invoking addProject");
+            return "project_add";
+        }
+
+        <input type="text" class="form-control" name="name"/>
+        
+        @RequestMapping(value="/add", method=RequestMethod.POST)
+        public String saveProject(HttpServletRequest request, HttpSession session){
+            System.out.println(session.getAttribute("token"));
+            System.out.println(request.getParameter("name"));
+            System.out.println("invoking saveProject");
+            return "project_add";
+        }
+
+        or, we can use @RequestParam("name") to access request parameter 
+
+        @RequestMapping(value="/add", method=RequestMethod.POST)
+        public String saveProject(@RequestParam("name") Long name, HttpSession session){
+            System.out.println(session.getAttribute("token"));
+            System.out.println(name);
+            System.out.println("invoking saveProject");
+            return "project_add";
+        }
+
 
 
 

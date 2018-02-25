@@ -1,6 +1,243 @@
----------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
+STS configurations : 
+------------------------------------------------------------------------------------------------------------
+1.  Window > Preferences > Spring > Dashboard > Uncheck "New feed Updates".
+
+2.  Window > Preferences > Spring > Validation > Uncheck "Web Flow Validator".
+
+3.  Window > Web Browser > Choose Suitable browser.
+
+4.  Window > Preferences > Maven > User Settings > Browse "settings.xml" 
+    (it may be in "conf" dir where your apache-maven is installed).
+
+5.  File > Export > Preferences.
+
+6.  Create new "Spring Legacy Project" > "Spring MVC Project" > Mention package 
+    (which will contain all of your classes). 
+
+------------------------------------------------------------------------------------------------------------
+Create Spring MVC App from scratch ::
+------------------------------------------------------------------------------------------------------------
+1.  Create a new "Maven Project".
+
+2.  Right click project > Configure > Convert to Faceted Form.
+
+3.  Check Dynamic Web Module and UP the version to support latest version of servlet API (i.e. 3.1)
+
+4.  Check "Build Path", Change "JRE System Library" to latest.
+
+5.  Click "Add Library" > "Server Runtime" > Select the suitable server.
+
+6.  Check "WebContent" folder is made in main project directory or not.
+    (which is not in alignment with maven standard directory).
+7.  Delete that "WebContent" directory and make a new one named "webapp" under "src > main" folder 
+    alongside "java" & "resources" folder. 
+    But we have to mention that this folder will be included in our deployment.
+
+8.  Open project properties by hitting (ALT + ENTER), goto "Deployment Assembly" tab,
+    then remove "/WebContent" entry. 
+
+9.  Add new folder "webapp" which we created earlier, with path "/", which shows what things will be 
+    included in our deployment.
+
+10. Create a new JSP file under "webapp" folder, and add some content to the body.
+
+11. Now to create "web.xml" file and "WEB-INF" dir under "webapps", Right click project > "Java EE Tools" 
+    > "Generate Deployment Descriptor Stub".
+
+12. Right click jsp file > Run on server > Choose Server > Finish.
+
+13. Add spring dependencies in pom.xml > goto "Dependencies" tab > Search dependencies by groupId, 
+    artifactId, or some pattern > Save pom.xml, which pulls all the transdependencies with compatible 
+    versions. 
+
+14. To see transdependencies, goto "Dependency Hierarchy" tab .
+
+15. Add following facades / dependencies : 
+        a. slf4j-log4j
+        b. log4j [Type :bundle] - then change it to [Type : jar]
+    Save pom.xml.
+
+16. Create a log4j configuration file (log4j.properties) under "src > main > resources", 
+    by pressing (CTRL + N).
+
+        log4j.rootLogger= DEBUG, stdout
+        log4j.appender.stdout=org.apache.log4j.ConsoleAppender
+        log4j.appender.stdout.Target=System.out
+        log4j.appender.stdout.layout=org.apache.log4j.PatternLayout
+        log4j.appender.stdout.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %-5p %c{1}:%L - %m%n
+
+17. Remove <welcome-file-list> from web.xml and add "DispatcherServlet" entry with it's mapping.
+        <servlet>
+            <servlet-name>appServlet</servlet-name>
+            <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+            <load-on-startup>1</load-on-startup>
+        </servlet>
+            
+        <servlet-mapping>
+            <servlet-name>appServlet</servlet-name>
+            <url-pattern>/</url-pattern>
+        </servlet-mapping>
+
+18. Make new Spring Bean Configuration file (named <servletName>-servlet.xml) under WEB-INF dir
+    for our Web Application Context.
+
+    It defines all of the behaviour for the container being configured for our web application.
+
+19. To place all maven dependencies in "WEB-INF/lib" dir, 
+    Open Project properties > Deployment Assembly > Click Add > Java Build Path Entries 
+    > Maven Dependencies.
+        
+20. To check successful Spring MVC project configuration check console for this line
+        DEBUG DispatcherServlet:891 - DispatcherServlet with name 'appServlet' processing GET request 
+        for [/SpringMVCScratchApp/]
+
+        If Server can't find <servletName>-servlet.xml file then it will show FileNotFoundException error,
+        
+        Caused by: java.io.FileNotFoundException: 
+        Could not open ServletContext resource [/WEB-INF/appServlet-servlet.xml]
+
+21. You can shift your ServletContext configuration file to a new location "/WEB-INF/spring/appServlet/",
+    with a new filename.
+        
+        <servlet>
+            <servlet-name>appServlet</servlet-name>
+            <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+            <init-param>
+                <param-name>contextConfigLocation</param-name>
+                <param-value>/WEB-INF/spring/appServlet/servlet-context.xml</param-value>
+            </init-param>
+            <load-on-startup>1</load-on-startup>
+        </servlet>
+
+    You can use wildcards in <param-value> to load multiple configuration files.
+        <param-value>/WEB-INF/spring/appServlet/*-context.xml</param-value>
+
+
+22. Each DispatcherServlet will map to an ApplicationContext.
+    Each ApplicationContext respresents a Spring IOC Container.
+
+    Spring IOC Container is responsible for instantiating, configuring & injecting your beans
+
+23. Add a Root Application Context, which can be shared among different instances of DispatcherServlet.
+    Yes you can have different instances of DispatcherServlet. and Root Application Context sits among 
+    top of them.
+
+        a.  Add a listener to web.xml file, which listens to the creation of web application 
+            and ServletContext when different phases of life cycle are hit, for the application 
+            when it is initializing or it's being destroyed on the server.
+
+            <listener>
+                <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+            </listener> 
+        
+        b.  The listener will look for the XML configuration file with "applicationContext.xml" 
+            in WEB-INF directory.
+            
+            INFO  XmlBeanDefinitionReader:316 - 
+            Loading XML bean definitions from ServletContext resource [/WEB-INF/applicationContext.xml]
+            ....
+            INFO  DispatcherServlet:494 - 
+            FrameworkServlet 'appServlet': initialization started
+            ....
+            INFO  XmlBeanDefinitionReader:316 - 
+            Loading XML bean definitions from ServletContext resource [/WEB-INF/spring/appServlet/servlet-context.xml]
+
+            [Note : You could reference a bean in applicationContext configuration file within DispatcherServlet 
+            configuration file.
+            You could not reference a bean in DispatcherServlet configuration file within the application 
+            Context configuration file.]
+
+24. You can customize the context configuration using context parameter.
+        <context-param>
+            <param-name>contextConfigLocation</param-name>
+            <param-value>/WEB-INF/spring/root-context.xml</param-value>
+        </context-param>
+
+        It is used to configure all the beans which are outside the scope of DispatcherServlet.
+        DispatcherServlet is performing all of the MVC configuration.
+        Root Application Context is performing all of the beans configuration which are not involved with
+        our MVC Project.
+
+25. Add namespaces and tags to servlet configuration file :
+        <mvc:annotation-driven/>
+        It configures a no of beans within the spring MVC framework. 
+        It's going to defines the beans, which helps us map request to controller methods. 
+        It's also going to support data binding, custom validation, JSR-303 validations support 
+        (annotation based validations), etc. 
+        It also provides conversion factory, that provides us predefined converters for common datatypes
+        like date and number.
+            
+26. Define the package where controllers are located
+        <context:component-scan base-package="com.home.springmvcapp"/>
+
+27. Create Controller class in the defined package with @Controller annotation.
+
+28. Create controller methods with below annotations 
+        a. @RequestMapping(value="/")
+        b. @ResponseBody - Make the returned String, body for our response.
+
+        @RequestMapping(value = "/home")
+        @ResponseBody
+	    public String home() {
+            return "Welcome Home";
+        }
+
+29. To display a view, remove @ResponseBody & return a logical view name from the method, 
+        @RequestMapping(value = "/home")
+	    public String home() {
+            return "home";
+        }
+    
+    Logical View Name : 
+        a.  Case sensitive.
+        b.  It is forwarded to our ViewResolver, which we have to define in 
+            Servlet configuration file.
+
+30. View Resolver - used to render the model into a browser. (like InternalResourceViewResolver)
+    InternalResourceViewResolver is used to handle our JSP files or mappings to our servlet.
+    Because, we never want to provide direct access to JSP/Servlet.        
+
+    If you face any errors in XML file, check for : 
+        xmlns="http://www.springframework.org/schema/beans"
+
+    Create a new folder "views" under "WEB-INF" which will be used as prefix for ViewResolver 
+    in Servlet configuration file.
+
+        <beans:bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+            <beans:property name="prefix" value="/WEB-INF/views/" />
+            <beans:property name="suffix" value=".jsp" />
+        </beans:bean>
+
+31. For placing web resources, create a folder named "resources" under "webapp" folder.
+
+32. We use Spring Tag Library for resolving URLS for web resources (like css, js files)
+        <%@ taglib prefix="spring" uri="http://www.springframework.org/tags" %>
+
+        <link rel="stylesheet" type="text/css" href='<spring:url value="/resources/css/styles.css"/>' >
+
+    Now if you run this, the DispatcherServlet won't be able to find CSS file. For this we have to do 
+    some additional configuration in Servlet configuration file.
+
+        <mvc:resources location="/resources/" mapping="/resources/**" />
+
+    (**) - ANT style path mapping, which allows us to map URI which may have additional (/) to it.
+
+
+
+
+
+
+
+
+
+
+
+
+
+------------------------------------------------------------------------------------------------------------
 Spring MVC : 
----------------------------------------------------------------------------
+------------------------------------------------------------------------------------------------------------
 
 1.  Use Spring Tool Suite to develop Spring Apps, because it makes things a lot easier.
 
@@ -10,15 +247,17 @@ Spring MVC :
         <jstl>              - provided by server
 
         [Note - <spring-mvc> automatically includes all dependent JARS 
-            (i.e. transdependencies like context, aop, core, web, expression, beans, commons-logging and aopalliance)]
+            (i.e. transdependencies like context, aop, core, web, expression, beans, commons-logging 
+            and aopalliance)]
 
 3.  Why we keep view files under a folder in WEB-INF?
         a. Security ::
-            I don't want people to knoe what my filename is specifically, I've to serve out to them whatever file I want.
+            I don't want people to knoe what my filename is specifically, I've to serve out to them 
+            whatever file I want.
         
         b. To control user experience ::
-            I force them to go through my controller and routing, ensuring that their session was set up correctly,
-            or they are logged in or other things, etc.
+            I force them to go through my controller and routing, ensuring that their session was set up 
+            correctly, or they are logged in or other things, etc.
 
         c. Other resons ::
             Bookmarking, deep linking, breadcrumbs
@@ -43,8 +282,11 @@ Spring MVC :
             <url-pattern>*.html</url-pattern>
         </servlet-mapping>
 
-        [Note : It will look for configuration file named <servletName>config.xml, unless you define the exact file name &
-        path in servlet <init-param>. <url-pattern> just shows simply what file extensions, or what path we are going to accept for our DispatcherServlet.]
+        [Note : It will look for configuration file named <servletName>-servlet.xml in WEB-INF dir, 
+        unless you define the exact file name & path in servlet <init-param>.
+        
+        <url-pattern> just shows simply what file extensions, or what path we are going to accept 
+        for our DispatcherServlet. Or, simply which types of request our servlet will handle.]
 
 6.  NameSpaces : 
 
@@ -54,24 +296,25 @@ Spring MVC :
             <context:component-scan base-package="com.mind.suneasy.controller.impl" />
         </beans>
 
-        [Note : We are asking for specific functionality out of that MVC & context schema, and it's going to go through
-        and replace this code with more complex definition. To add namespaces in your XML file simply use the "Namespaces"
-        tab.]
+        [Note : We are asking for specific functionality out of that MVC & context schema, 
+        and it's going to go through and replace this code with more complex definition. 
+        To add namespaces in your XML file simply use the "Namespaces" tab.]
         
         <mvc:annotation-driven />   - To use annotation driven approach.
         <context:component-scan>    - Used to scan controllers in our project
 
 7.  Thanks to Spring, everything is POJO here & has a Tiered Architecture .
-        @Controller         - Represents Spring controller class.
-        @RequestMapping     - Represents tying of the controller method with some url, having some value. 
-        Model               - HashMap, which is passed to DispatcherServlet. 
-                              You can add attributes using model.addAttribute("abc","xyz").
-        returned views      - controller method return view file name(key) to the DispatcherServlet, which will find that                          page using InternalResourceViewResolver in config.xml file.
-        @Repository         - Represents Model class
-        @Service            - Represents Business logic class.
-        @ModelAttribute     - Used when we want to send data to our controller or retrieve data from our controller
-                              that's bound to an object or represented by an object. It can also be validated with 
-                              a binding result.
+        @Controller         -   Represents Spring controller class.
+        @RequestMapping     -   Represents tying of the controller method with some url, having some value. 
+        Model               -   HashMap, which is passed to DispatcherServlet. 
+                                You can add attributes using model.addAttribute("abc","xyz").
+        returned views      -   controller method return view file name(key) to the DispatcherServlet, which 
+                                will find that page using InternalResourceViewResolver in config.xml file.
+        @Repository         -   Represents Model class
+        @Service            -   Represents Business logic class.
+        @ModelAttribute     -   Used when we want to send data to our controller or retrieve data from our 
+                                controller that's bound to an object or represented by an object. 
+                                It can also be validated with a binding result.
 
 8.  How to let Spring know where my views are ?
         By using InternalResourceViewResolver in config file.
@@ -98,8 +341,8 @@ Spring MVC :
         b. Annotated with @Service
         c. Where the business logic resides.
         d. Ensures business object is in valid state.
-        e. Where transactions often begin (2 phase commits, or where we know there is a chance we might have to 
-           roll back or access web services)
+        e. Where transactions often begin (2 phase commits, or where we know there is a chance we might 
+           have to roll back or access web services)
         f. Often have same methods as Repository, but different focus.
 
 11. Repository :
@@ -128,18 +371,20 @@ Spring MVC :
         </form:form>
 
         Before using this we have to create beans with properties same as path attributes above.
-        We also have to add parameter to our controller method (@ModelAttribute ("<commandName>") BeanClass object)
+        We also have to add parameter to our controller method 
+        (@ModelAttribute ("<commandName>") BeanClass object)
 
         CTRL+SHIFT+O    - Importing unimported Classes
 
 
 13. View ::
-        We can have multiple view resolvers (you have to order them, which one will gets fired first) and multiple view types in our application.
+        We can have multiple view resolvers (you have to order them, which one will gets fired first) 
+        and multiple view types in our application.
 
-        ResourceBundleViewResolver      - used for internationalization purposes.
-        TilesViewResolver               - used for tiles templated layout architecture.
-        ContetNegotiatingViewResolver   - used when returning multiple content types from the same application
-                                          e.g. XML, JSON, JSP, HTML, etc.
+        ResourceBundleViewResolver      -   used for internationalization purposes.
+        TilesViewResolver               -   used for tiles templated layout architecture.
+        ContetNegotiatingViewResolver   -   used when returning multiple content types from the same 
+                                            application e.g. XML, JSON, JSP, HTML, etc.
 
 14. Chaining in controller methods ::
         
@@ -157,7 +402,8 @@ Spring MVC :
 
 15. Display static content through Spring MVC ::
         In content.xml define 
-            <mvc:resources location="<folder_name_in_web.xml_having_static_content>" mapping="<files_under_dir>" />
+            <mvc:resources location="<folder_name_in_web.xml_having_static_content>" 
+                mapping="<files_under_dir>" />
 
             <mvc:resources location="pdfs" mapping="/pdfs/**" />
 
@@ -169,7 +415,9 @@ Spring MVC :
                 <url-pattern>/pdfs/**</url-pattern>
             </servlet-mapping>
 
-        Spring uses File resolver controller, which bypasses all of our defined controllers and shows static content.
+        Spring uses File resolver controller, which bypasses all of our defined controllers 
+        and shows static content.
+
         http://localhost:8080/SpringApp/pdfs/xyz.pdf
 
 16. Spring Tag Libraries ::
@@ -220,16 +468,17 @@ Spring MVC :
 
             http://localhost:8080/SpringApp?language=en
 
-            This interceptor looks for parameter in request with name "language" and fetch the text accordingly 
-            from the matched language property file.
+            This interceptor looks for parameter in request with name "language" and fetch the text 
+            accordingly from the matched language property file.
 
 20. Model parameter in controller methods :
         a. Spring will pass(by reference) in the backing model to your method.
-        b. It will get absorbed back in the framework as a part of interceptor as a part of request life cycle.
+        b. It will get absorbed back in the framework as a part of interceptor as a part of request 
+           life cycle.
         c. Actually return back the data to JSP page.
 
-        [Note : If you want to store object in the session use @SessionAttributes("<objName>") above class definition.
-                If you want to access objects in views use ${objName.property}.]
+        [Note : If you want to store object in the session use @SessionAttributes("<objName>") 
+                above class definition. If you want to access objects in views use ${objName.property}.]
 
 21. Constraint validation ::
         When yo're expecting a field not to be null, must have letters, numbers, etc, like that.
@@ -238,9 +487,10 @@ Spring MVC :
         Null fields aren't necessarily business logic, but rather constraints.
         These are what Spring MVC has built-in mechanisms to help us validate against.
         
-        The other type of validation on business logic should really be handled on service tier & not the controller.
-        This type of validation is guaranteeing things like an entity is valid in DB or a username isn't already taken 
-        in our LDAP server or our DB.
+        The other type of validation on business logic should really be handled on service tier 
+        & not the controller.
+        This type of validation is guaranteeing things like an entity is valid in DB 
+        or a username isn't already taken in our LDAP server or our DB.
 
 23. Validator Interface : 
         Can be used at Service tier.
@@ -336,8 +586,8 @@ Spring MVC :
 
 27. ContentNegotiatingViewResolver 
         a. Used to return various content types from our application based off the request.
-        b. Uses the Accepts header that is sent using http headers, to determine the content that it'll host up. 
-           It can also look at the file extension that is sent as well.
+        b. Uses the Accepts header that is sent using http headers, to determine the content 
+           that it'll host up. It can also look at the file extension that is sent as well.
 
 
 28. RestFul Service ::
@@ -467,11 +717,7 @@ Spring MVC :
 				<form:select id="activities" path="activity"></form:select>
 			</td>
 
-            The string '<spring:url value="activities.json"/>' is equal to 'http://localhost:8080/SpringApp/activities.json'.
+            The string '<spring:url value="activities.json"/>' is equal to 
+            'http://localhost:8080/SpringApp/activities.json'.
 
-4.  
-
-5. STS configurations : 
-
-
-
+  

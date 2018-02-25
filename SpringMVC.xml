@@ -223,7 +223,48 @@ Create Spring MVC App from scratch ::
 
     (**) - ANT style path mapping, which allows us to map URI which may have additional (/) to it.
 
+33. Controller methods are known as handler methods.
 
+    If we specify @RequestMapping("/add") to the controller Class, then it will handle all those requests
+    having "/add" url , and it's handler methods will be called when "/add/****" url is hit
+
+        http://localhost:8080/SpringMVCApp/add/student
+
+    You can have muliple handler methods having same url but different method type, params and 
+    presence of a parameter.
+
+        @Controller
+        @RequestMapping("/project")
+        public class ProjectController {
+
+            @RequestMapping(value="/add",method=RequestMethod.GET)
+            public String addProject(){
+                System.out.println("invoking addProject");
+                return "project_add";
+            }
+
+            @RequestMapping(value="/add", method=RequestMethod.POST)
+            public String saveProject(){
+                System.out.println("invoking saveProject");
+                return "project_add";
+            }
+
+            @RequestMapping(value="/add", method=RequestMethod.POST, params={"type=multi"})
+            public String saveMultiYearProject(){
+                System.out.println("invoking saveMultiYearProject");
+                return "project_add";
+            }
+
+            @RequestMapping(value="/add", method=RequestMethod.POST, params={"type=multi","special"})
+            public String saveSpecialProject(){
+                System.out.println("invoking saveSpecialProject");
+                return "project_add";
+            }
+
+            //"type" and "special" are parameters, where "type" has value "multi".
+        }
+
+34. 
 
 
 
